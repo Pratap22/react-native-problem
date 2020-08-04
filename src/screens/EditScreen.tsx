@@ -14,6 +14,7 @@ import {
 } from '../navigation/navigationParamList';
 import {userIcon, callIcon, emailIcon} from '../assets/icons';
 import CommonTextInput from '../component/CommonTextInput';
+import ImagePickerComponent from '../component/ImagePicker';
 
 export interface EditScreenProps extends ContactNavigationProp<'EditProfile'> {
   route: RouteProp<NavigationParamList, 'EditProfile'>;
@@ -29,9 +30,14 @@ const EditScreen = ({navigation, route}: EditScreenProps) => {
     profileData.phoneNumber || '',
   );
   const [email, setEmail] = useState<string>(profileData.firstName || '');
+  const [imageUri, setImageUri] = useState<any>(profileData.imageUri || '');
 
   return (
     <ScrollView style={styles.container}>
+      <ImagePickerComponent
+        uri={imageUri}
+        onUriChange={(uri) => setImageUri(uri)}
+      />
       <CommonTextInput
         icon={userIcon}
         fieldLabel="First Name"

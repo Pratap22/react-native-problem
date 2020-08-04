@@ -7,6 +7,8 @@ export let DATA = [
     lastName: 'Singh Lohia',
     phoneNumber: '9123459876',
     email: 'dummy@gmail.com',
+    imageUri:
+      'content://com.contactapp.provider/root/storage/emulated/0/Pictures/images/image-055b0624-9d8f-43a5-ad68-46cfc53ab147.jpg',
   },
   {
     id: '2',
@@ -14,6 +16,8 @@ export let DATA = [
     lastName: 'Sharma',
     phoneNumber: '8884209127',
     email: 'dummy@gmail.com',
+    imageUri:
+      'content://com.contactapp.provider/root/storage/emulated/0/Pictures/images/image-055b0624-9d8f-43a5-ad68-46cfc53ab147.jpg',
   },
   {
     id: '3',
@@ -21,6 +25,8 @@ export let DATA = [
     lastName: 'Sharma',
     phoneNumber: '8765432192',
     email: 'dummy@gmail.com',
+    imageUri:
+      'content://com.contactapp.provider/root/storage/emulated/0/Pictures/images/image-055b0624-9d8f-43a5-ad68-46cfc53ab147.jpg',
   },
   {
     id: '4',
@@ -42,6 +48,8 @@ export let DATA = [
     lastName: 'Sharma',
     phoneNumber: '8884209127',
     email: 'dummy@gmail.com',
+    imageUri:
+      'content://com.contactapp.provider/root/storage/emulated/0/Pictures/images/image-055b0624-9d8f-43a5-ad68-46cfc53ab147.jpg',
   },
   {
     id: '8',
@@ -67,6 +75,7 @@ export const contacts = DATA.map(
       item.lastName,
       item.phoneNumber,
       item.email,
+      item.imageUri,
     ),
 );
 

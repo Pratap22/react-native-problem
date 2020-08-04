@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   Text,
   View,
@@ -13,20 +13,15 @@ import {
   ContactNavigationProp,
   NavigationParamList,
 } from '../navigation/navigationParamList';
-import {
-  callIcon,
-  emailIcon,
-  userIcon,
-  editIcon,
-  whatsAppIcon,
-} from '../assets/icons';
+import {userIcon, editIcon, whatsAppIcon} from '../assets/icons';
 
 interface ProfileScreenProps extends ContactNavigationProp<'Profile'> {
   route: RouteProp<NavigationParamList, 'Profile'>;
 }
 
 function ProfileScreen({navigation, route}: ProfileScreenProps) {
-  let {firstName, lastName, phoneNumber} = route.params.contact;
+  let {firstName, lastName, phoneNumber, imageUri} = route.params.contact;
+  console.log('Image uri ', imageUri);
   return (
     <ScrollView style={styles.container}>
       <View>
@@ -34,7 +29,10 @@ function ProfileScreen({navigation, route}: ProfileScreenProps) {
           <View style={styles.topContainer}>
             <View style={styles.viewImg}>
               <TouchableOpacity style={styles.touchImg}>
-                <Image source={userIcon} style={styles.img} />
+                <Image
+                  source={imageUri ? {uri: imageUri} : userIcon}
+                  style={styles.img}
+                />
               </TouchableOpacity>
             </View>
             <View style={styles.viewfullName}>
@@ -104,13 +102,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 
     backgroundColor: 'black',
-    width: 50,
-    height: 50,
-    borderRadius: 50,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
   img: {
-    height: 40,
-    width: 40,
+    height: 80,
+    width: 80,
+    borderRadius: 40,
   },
 
   viewfullName: {
