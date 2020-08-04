@@ -1,19 +1,42 @@
-import React, {useContext} from 'react';
-import {Button, Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {ContactNavigationProp} from '../navigation/navigationParamList';
+import {contacts} from '../db/db';
+import ContactCard from '../../src/component/ContactCard';
+import {ContactModel} from '../../src/model/ContactModel';
 
-function HomeScreen({navigation}: ContactNavigationProp<'Home'>) {
+export interface HomeScreenProps extends ContactNavigationProp<'Home'> {}
+
+const HomeScreen = ({navigation}: HomeScreenProps) => {
+  const [contac, setContacts] = useState<Array<ContactModel>>(contacts);
   return (
-    <View>
-      <Text>I am a login screen</Text>
-      <Button
-        title="go to register"
-        onPress={() => {
-          navigation.navigate('Profile');
-        }}
-      />
+    <View style={styles.container}>
+      <View>
+        <FlatList<ContactModel>
+          data={contac}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item}) => {
+            return (
+              <ContactCard
+                contact={item}
+                onCardPress={() =>
+                  navigation.navigate('Profile', {
+                    contact: item,
+                  })
+                }
+              />
+            );
+          }}
+        />
+      </View>
     </View>
   );
-}
+};
 
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
