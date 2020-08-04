@@ -33,7 +33,6 @@ const ImagePickerComponent = ({uri, onUriChange}: Props) => {
     });
   };
 
-  console.log('Imageuri ', uri);
   return (
     <View style={styles.viewImg}>
       <TouchableOpacity
