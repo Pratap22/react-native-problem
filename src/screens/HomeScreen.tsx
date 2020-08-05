@@ -5,6 +5,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Text,
 } from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import {ContactNavigationProp} from '../navigation/navigationParamList';
@@ -53,6 +54,14 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
             />
           );
         }}
+        ListEmptyComponent={
+          <View style={styles.emptyCont}>
+            <Text
+              style={
+                styles.emptyText
+              }>{`No Contacts found!\nPlease add contacts`}</Text>
+          </View>
+        }
       />
     </View>
   );
@@ -66,4 +75,8 @@ const styles = StyleSheet.create({
   },
   addIcon: {width: 24, height: 24},
   iconCont: {paddingEnd: 10},
+  emptyCont: {paddingTop: 30, alignItems: 'center'},
+  emptyText: {
+    fontSize: 20,
+  },
 });
