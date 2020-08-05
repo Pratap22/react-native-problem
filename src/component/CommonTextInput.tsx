@@ -13,8 +13,8 @@ interface CommonTextInputProps {
   fieldLabel: string;
   fieldValue: string;
   fieldPlaceHolder: string;
-  fieldErrorMessage: string;
-  isFieldError: boolean;
+  fieldErrorMessage?: string;
+  isFieldError?: boolean;
   keyboardType?: KeyboardTypeOptions;
   onChangeText: (value: string) => void;
 }

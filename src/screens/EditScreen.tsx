@@ -1,8 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
-  Image,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
@@ -15,6 +14,8 @@ import {
 import {userIcon, callIcon, emailIcon} from '../assets/icons';
 import CommonTextInput from '../component/CommonTextInput';
 import ImagePickerComponent from '../component/ImagePicker';
+import ContactService from '../db/contactService';
+import CommonUtils from '../utils/commonUtils';
 
 export interface EditScreenProps extends ContactNavigationProp<'EditProfile'> {
   route: RouteProp<NavigationParamList, 'EditProfile'>;
@@ -22,6 +23,12 @@ export interface EditScreenProps extends ContactNavigationProp<'EditProfile'> {
 
 const EditScreen = ({navigation, route}: EditScreenProps) => {
   const profileData = route.params.contact;
+  const isEdit = route.params.isEdit;
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: isEdit ? 'Edit Contact' : 'Add Contact',
+    });
+  }, [isEdit]);
   const [firstName, setFirstName] = useState<string>(
     profileData.firstName || '',
   );
@@ -29,22 +36,66 @@ const EditScreen = ({navigation, route}: EditScreenProps) => {
   const [phoneNumber, setPhoneNumber] = useState<string>(
     profileData.phoneNumber || '',
   );
-  const [email, setEmail] = useState<string>(profileData.firstName || '');
-  const [imageUri, setImageUri] = useState<any>(profileData.imageUri || '');
+  const [email, setEmail] = useState<string>(profileData.email || '');
+  const [imageUri, setImageUri] = useState<string>(profileData.imageUri || '');
+  const [fieldErrors, setFieldErrors] = useState<Map<string, string>>();
+
+  const handleSaveUpdate = () => {
+    //validate and save/update
+    let fieldValidate = CommonUtils.validateInputs(
+      firstName,
+      phoneNumber,
+      email,
+    );
+    console.log(fieldValidate, email);
+    if (!fieldValidate.isValid) {
+      setFieldErrors(fieldValidate.fieldErrors);
+      return;
+    }
+
+    if (isEdit) {
+      ContactService.update(() => {
+        // realm object cannot be updated out of write class
+        profileData.firstName = firstName;
+        profileData.lastName = lastName;
+        profileData.phoneNumber = phoneNumber;
+        profileData.email = email;
+        profileData.imageUri = imageUri;
+        navigation.goBack();
+      });
+    } else {
+      profileData.firstName = firstName;
+      profileData.lastName = lastName;
+      profileData.phoneNumber = phoneNumber;
+      profileData.email = email;
+      profileData.imageUri = imageUri;
+      ContactService.save(profileData);
+      navigation.goBack();
+    }
+  };
+
+  const firstChar = firstName.charAt(0);
+
+  const isFieldError = (fieldName: string): boolean => {
+    let isError = fieldErrors?.get(fieldName);
+
+    return isError?.length !== 0;
+  };
 
   return (
     <ScrollView style={styles.container}>
       <ImagePickerComponent
         uri={imageUri}
         onUriChange={(uri) => setImageUri(uri)}
+        firstChar={firstChar}
       />
       <CommonTextInput
         icon={userIcon}
         fieldLabel="First Name"
         fieldValue={firstName}
         fieldPlaceHolder="Enter first name"
-        isFieldError={false}
-        fieldErrorMessage="Please enter first name"
+        isFieldError={isFieldError('firstName')}
+        fieldErrorMessage={fieldErrors?.get('firstName') || ''}
         onChangeText={(text) => setFirstName(text)}
       />
       <CommonTextInput
@@ -52,8 +103,6 @@ const EditScreen = ({navigation, route}: EditScreenProps) => {
         fieldLabel="Last Name"
         fieldValue={lastName}
         fieldPlaceHolder="Enter last name"
-        isFieldError={false}
-        fieldErrorMessage="Please enter last name"
         onChangeText={(text) => setLastName(text)}
       />
       <CommonTextInput
@@ -61,8 +110,8 @@ const EditScreen = ({navigation, route}: EditScreenProps) => {
         fieldLabel="Mobile number"
         fieldValue={phoneNumber}
         fieldPlaceHolder="+91- 9772282828"
-        isFieldError={false}
-        fieldErrorMessage="Please enter mobile number"
+        isFieldError={isFieldError('phoneNumber')}
+        fieldErrorMessage={fieldErrors?.get('phoneNumber') || ''}
         onChangeText={(text) => setPhoneNumber(text)}
         keyboardType="phone-pad"
       />
@@ -71,17 +120,15 @@ const EditScreen = ({navigation, route}: EditScreenProps) => {
         fieldLabel="Email"
         fieldValue={email}
         fieldPlaceHolder="abc@xyz.com"
-        isFieldError={false}
-        fieldErrorMessage="Please enter email Id"
+        isFieldError={isFieldError('email')}
+        fieldErrorMessage={fieldErrors?.get('email') || ''}
         onChangeText={(text) => setEmail(text)}
         keyboardType="email-address"
       />
 
       <View style={styles.viewSavebtn}>
-        <TouchableOpacity onPress={() => {}} style={styles.btn}>
-          <Text style={styles.saveTxt}>
-            {route.params === undefined ? 'Save' : 'Update'}
-          </Text>
+        <TouchableOpacity onPress={handleSaveUpdate} style={styles.btn}>
+          <Text style={styles.saveTxt}>{!isEdit ? 'Save' : 'Update'}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

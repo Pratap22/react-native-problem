@@ -1,7 +1,8 @@
 import React from 'react';
 import ImagePicker from 'react-native-image-picker';
 import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
-import {userIcon, editIcon} from '../assets/icons';
+import {editIcon} from '../assets/icons';
+import NoImagePlaceHolder from './NoImagePlaceHolder';
 
 const options = {
   title: 'Select Avatar',
@@ -13,10 +14,11 @@ const options = {
 
 export interface Props {
   uri: string;
+  firstChar?: string;
   onUriChange: (uri: any) => void;
 }
 
-const ImagePickerComponent = ({uri, onUriChange}: Props) => {
+const ImagePickerComponent = ({uri, onUriChange, firstChar}: Props) => {
   const handleImageSelectClick = () => {
     ImagePicker.showImagePicker(options, (response) => {
       console.log('Response = ', response);
@@ -35,12 +37,23 @@ const ImagePickerComponent = ({uri, onUriChange}: Props) => {
 
   return (
     <View style={styles.viewImg}>
-      <TouchableOpacity
-        style={styles.touchImg}
-        onPress={handleImageSelectClick}>
-        <Image source={uri ? {uri: uri} : userIcon} style={styles.image} />
-        <Image source={editIcon} style={styles.editIcon} />
-      </TouchableOpacity>
+      {uri ? (
+        <TouchableOpacity
+          style={styles.touchImg}
+          onPress={handleImageSelectClick}>
+          <Image source={{uri: uri}} style={styles.image} />
+          <Image source={editIcon} style={styles.editIcon} />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={handleImageSelectClick}>
+          <NoImagePlaceHolder
+            char={firstChar || 'A'}
+            containerStyle={styles.placeholderContStyle}
+            textStyle={styles.placeholderTextStyle}
+          />
+          <Image source={editIcon} style={styles.editIcon} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -67,6 +80,13 @@ const styles = StyleSheet.create({
     right: 5,
     bottom: 5,
   },
+  placeholderContStyle: {
+    position: 'relative',
+    height: 100,
+    width: 100,
+    borderRadius: 50,
+  },
+  placeholderTextStyle: {fontSize: 32},
 });
 
 export default ImagePickerComponent;

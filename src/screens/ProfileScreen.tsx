@@ -8,38 +8,52 @@ import {
   ScrollView,
   Linking,
 } from 'react-native';
-import {RouteProp} from '@react-navigation/native';
+import {RouteProp, useIsFocused} from '@react-navigation/native';
 import {
   ContactNavigationProp,
   NavigationParamList,
 } from '../navigation/navigationParamList';
-import {userIcon, editIcon, whatsAppIcon} from '../assets/icons';
+import {editIcon, whatsAppIcon} from '../assets/icons';
+import NoImagePlaceHolder from '../component/NoImagePlaceHolder';
 
 interface ProfileScreenProps extends ContactNavigationProp<'Profile'> {
   route: RouteProp<NavigationParamList, 'Profile'>;
 }
 
 function ProfileScreen({navigation, route}: ProfileScreenProps) {
-  let {firstName, lastName, phoneNumber, imageUri} = route.params.contact;
-  console.log('Image uri ', imageUri);
+  //re-reder the screen is its focused
+  useIsFocused();
+  let {
+    firstName,
+    lastName,
+    phoneNumber,
+    imageUri,
+    email,
+  } = route.params.contact;
   return (
     <ScrollView style={styles.container}>
       <View>
         <View>
           <View style={styles.topContainer}>
             <View style={styles.viewImg}>
-              <TouchableOpacity style={styles.touchImg}>
-                <Image
-                  source={imageUri ? {uri: imageUri} : userIcon}
-                  style={styles.img}
+              {imageUri ? (
+                <View style={styles.touchImg}>
+                  <Image source={{uri: imageUri}} style={styles.img} />
+                </View>
+              ) : (
+                <NoImagePlaceHolder
+                  char={firstName.charAt(0)}
+                  containerStyle={styles.placeholderContStyle}
+                  textStyle={styles.placeholderTextStyle}
                 />
-              </TouchableOpacity>
+              )}
             </View>
             <View style={styles.viewfullName}>
               <Text style={styles.fullnameTxt}>
                 {firstName + ' ' + lastName}
               </Text>
               <Text style={styles.numTxt}>{phoneNumber}</Text>
+              <Text style={styles.numTxt}>{email}</Text>
             </View>
           </View>
 
@@ -47,7 +61,6 @@ function ProfileScreen({navigation, route}: ProfileScreenProps) {
             <View style={styles.commonViewWhatsapp}>
               <View style={styles.commonViewflexStart}>
                 <Text style={styles.whatsappCommonTxt}>
-                  {' '}
                   Message {'   ' + phoneNumber}
                 </Text>
               </View>
@@ -67,6 +80,7 @@ function ProfileScreen({navigation, route}: ProfileScreenProps) {
               onPress={() =>
                 navigation.navigate('EditProfile', {
                   contact: route.params.contact,
+                  isEdit: true,
                 })
               }>
               <Image source={editIcon} style={styles.imgEditIcon} />
@@ -100,17 +114,23 @@ const styles = StyleSheet.create({
   touchImg: {
     justifyContent: 'center',
     alignItems: 'center',
-
     backgroundColor: 'black',
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
   },
   img: {
-    height: 80,
-    width: 80,
-    borderRadius: 40,
+    height: 100,
+    width: 100,
+    borderRadius: 50,
   },
+  placeholderContStyle: {
+    position: 'relative',
+    height: 100,
+    width: 100,
+    borderRadius: 50,
+  },
+  placeholderTextStyle: {fontSize: 32},
 
   viewfullName: {
     alignItems: 'center',
@@ -152,7 +172,7 @@ const styles = StyleSheet.create({
   },
   commonViewflexEnd: {
     alignItems: 'flex-end',
-
+    justifyContent: 'center',
     width: '20%',
   },
   whatsappImage: {

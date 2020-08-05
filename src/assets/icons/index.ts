@@ -4,5 +4,14 @@ const editIcon = require('./edit.png');
 const emailIcon = require('./email.png');
 const userIcon = require('./user.png');
 const whatsAppIcon = require('./whatsapp.png');
+const addIcon = require('./add.png');
 
-export {callIcon, cameraIcon, editIcon, emailIcon, userIcon, whatsAppIcon};
+export {
+  callIcon,
+  addIcon,
+  cameraIcon,
+  editIcon,
+  emailIcon,
+  userIcon,
+  whatsAppIcon,
+};

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
+import {Text, View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import {ContactModel} from '../../src/model/ContactModel';
-import CommonUtils from '../utils/commonUtils';
+import NoImagePlaceHolder from './NoImagePlaceHolder';
 
 export interface Props {
   contact: ContactModel;
@@ -9,15 +9,21 @@ export interface Props {
 }
 
 const ContactCard = ({contact, onCardPress}: Props) => {
-  const firstNameFirstCharacter = contact.firstName.charAt(0).toUpperCase();
+  const firstCharacter = contact.firstName.charAt(0).toUpperCase();
   return (
     <TouchableOpacity onPress={onCardPress} style={styles.renderItemMainView}>
-      <View
-        style={[
-          styles.firstNameCharacterView,
-          {backgroundColor: CommonUtils.getRandomColor()},
-        ]}>
-        <Text style={styles.firstCharTxt}>{firstNameFirstCharacter}</Text>
+      <View style={styles.emptyNamePlaceholder}>
+        {contact.imageUri ? (
+          <Image
+            source={{uri: contact.imageUri}}
+            style={styles.emptyNamePlaceholder}
+          />
+        ) : (
+          <NoImagePlaceHolder
+            char={firstCharacter}
+            containerStyle={styles.emptyNamePlaceholder}
+          />
+        )}
       </View>
 
       <View style={styles.fullnameView}>
@@ -59,6 +65,11 @@ const styles = StyleSheet.create({
   },
   firstCharTxt: {
     color: 'white',
+  },
+  emptyNamePlaceholder: {
+    height: 30,
+    width: 30,
+    borderRadius: 30,
   },
 });
 
