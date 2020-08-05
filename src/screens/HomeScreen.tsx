@@ -20,7 +20,7 @@ let contactsRealm = ContactService.findAll();
 
 const HomeScreen = ({navigation}: HomeScreenProps) => {
   //re-render on focus
-  let isFocused = useIsFocused();
+  useIsFocused();
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
