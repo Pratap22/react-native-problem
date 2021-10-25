@@ -39,4 +39,4 @@ npx react-native run-ios
 
 ## APK
 
-<a href="screenshots/app-debug.apk" download>Click to APK</a>
+<a href="screenshots/app-debug.apk" download>Click to download APK</a>
