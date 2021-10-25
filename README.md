@@ -36,3 +36,7 @@ npx react-native run-ios
 ![Create screen](/screenshots/2.png?raw=true)
 ![Home with contacts](/screenshots/3.png?raw=true)
 ![Update screen](/screenshots/4.png?raw=true)
+
+## APK
+
+<a href="screenshots/app-debug.apk" download>Click to APK</a>
